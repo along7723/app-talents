@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanye.modules.talents.talents.mapper.TalTalentsMapper">
+    <select id="queryOneTalTalents" resultType="com.fanye.modules.talents.talents.entity.TalTalents">
+        SELECT tal_id,name,sex,birthday,idno,nation,politics_status,marital_status,height,weight,hjd,jgd,jzd,
+        jzdxz,phone,education,marjor,lat_domain,work_company,work_job,is_expert,
+        expert_level,is_need_check,check_level,checked_user,status,create_comp_id,create_user,create_time FROM tal_talents
+         where create_user=#{userId}
+         LIMIT 1
+
+    </select>
+
+    <select id="queryCompanyTalents" resultType="com.fanye.modules.talents.talents.entity.TalTalents">
+        SELECT tal_id,name,sex,birthday,idno,nation,politics_status,marital_status,height,weight,hjd,jgd,jzd,
+        jzdxz,phone,education,marjor,lat_domain,work_company,work_job,is_expert,
+        expert_level,is_need_check,check_level,checked_user,status,create_comp_id,create_user,create_time FROM tal_talents
+         where create_comp_id=#{companyId}
+         LIMIT 1
+
+    </select>
+</mapper>

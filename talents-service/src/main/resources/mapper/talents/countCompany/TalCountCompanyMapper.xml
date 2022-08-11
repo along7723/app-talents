@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanye.modules.talents.countCompany.mapper.TalCountCompanyMapper">
+
+    <select id="onTheJob" resultType="map">
+            SELECT comp_name name,IFNULL(value,0) value FROM tal_company c
+             LEFT JOIN (
+             SELECT  COUNT(*) value,create_comp_id FROM tal_talents_formal
+             WHERE create_comp_id is not NULL GROUP BY create_comp_id  ORDER BY value DESC LIMIT 10 ) f
+             ON  c.comp_id=f.create_comp_id
+              ORDER BY value DESC
+    </select>
+    <select id="quantityChange" resultType="map">
+       SELECT count_time name,count_num value FROM tal_count_company ORDER BY count_time DESC LIMIT 10
+    </select>
+    <select id="unitType" resultType="map">
+      SELECT IFNULL(value,0) value ,d.name FROM sys_core_dic_item  d
+        LEFT JOIN (SELECT count(1) value,comp_natrue FROM tal_company GROUP BY comp_natrue) c ON d.code=c.comp_natrue
+        WHERE dic_code ='CompanyNature'
+    </select>
+
+
+</mapper>

@@ -1,0 +1,98 @@
+server:
+  port: 82
+  servlet:
+    context-path: /sys/generate
+
+dubbo:
+  application:
+    #注册到注册中心的名称
+    name: sys-service-generate
+  #采用协议和端口号
+  protocol:
+    #使用的协议类型
+    name: dubbo
+    #发布 dubbo 端口号为 20880
+    port: 20882
+  registry:
+    #注册中心地址
+    address: zookeeper://10.43.35.33:2181
+  scan:
+    #包扫描范围
+    base-packages: com.fanye
+  consumer:
+    timeout: 30000
+    #启动检查配置，此处配置为不检查
+    check: false
+    retries: 0
+
+spring:
+  mvc:
+    #出现错误时, 直接抛出异常
+    throw-exception-if-no-handler-found: true
+  resources:
+    #不要为我们工程中的资源文件建立映射:false
+    add-mappings: true
+  #redis配置
+  redis:
+    database: 0
+    host: 10.43.35.33
+    port: 6379
+    password: ''
+    lettuce:
+      pool:
+        max-active: 8   #最大连接数据库连接数,设 0 为没有限制
+        max-idle: 8     #最大等待连接中的数量,设 0 为没有限制
+        max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
+      shutdown-timeout: 100ms
+
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://10.43.35.34:3306/talents?useUnicode=true&characterEncoding=utf8&serverTimezone=Hongkong&useSSL=false
+      password: CqJrrc!@#456
+      username: talents
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+mybatis-plus:
+  global-config:
+    id-type: 0
+  configuration:
+    jdbc-type-for-null: 'null' #注意：单引号
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#配置日志
+logging:
+  #此处存放日志的路径
+  path:
+    config: classpath:logback-spring.xml
+  #指定不同目录下的日志的级别
+  level:
+    com.fanye.modules: INFO
+app:
+  resource:
+    load-to-db: false #加载资源到数据库中

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanye.modules.talents.countUserType.mapper.TalCountUserMapper">
+    <select id="countSex" resultType="map">
+        SELECT count(1) value,D.NAME FROM tal_talents_formal F
+            RIGHT JOIN ( SELECT * FROM sys_core_dic_item WHERE dic_code = 'Sex' ) D ON D.CODE = F.sex
+            WHERE sex IS NOT NULL
+        GROUP BY sex
+    </select>
+    <select id="countAge" resultType="map">
+        SELECT nnd as name,count(1) as value from(
+           SELECT
+              CASE
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) >= 60 THEN '60岁以上'
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) >= 31 THEN '31-59岁'
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) >= 23  THEN '23-30岁'
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) >= 18 THEN '18-22岁'
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) >= 13 THEN '13-17岁'
+               WHEN ROUND(DATEDIFF(CURDATE(), birthday)/365.2422) &lt; 13   THEN '12岁及以下'
+              END as nnd
+           from tal_talents_formal WHERE birthday IS NOT NULL
+        ) a GROUP BY nnd
+    </select>
+    <select id="countEducation" resultType="map">
+         SELECT count(1) value,D.NAME FROM tal_talents_formal F
+            RIGHT JOIN ( SELECT * FROM sys_core_dic_item WHERE dic_code = 'Education' ) D ON D.CODE = F.education
+            WHERE education IS NOT NULL
+            GROUP BY education
+    </select>
+    <select id="countNation" resultType="map">
+        SELECT count(1) value,D.NAME FROM tal_talents_formal F
+        RIGHT JOIN ( SELECT * FROM sys_core_dic_item WHERE dic_code = 'Nation' ) D ON D.CODE = F.nation
+        WHERE nation IS NOT NULL
+        GROUP BY nation
+    </select>
+    <select id="countSource" resultType="map">
+       SELECT IFNULL(value,0) value,name FROM(
+        SELECT  a.value,c.nickname name from ( SELECT COUNT(1) value ,concat(substring(jgd, 1, 2), "0000")city
+        FROM tal_talents_formal WHERE jgd IS NOT NULL and jgd != ''   GROUP BY city  ) a
+        RIGHT JOIN sys_region_province c ON a.city = c.id
+        ) t
+    </select>
+    <select id="countUserTrend" resultType="map">
+        SELECT MAX(count_num) value,DATE_FORMAT(count_time,'%Y-%m-%d') result_time,user_type from tal_count_user
+        GROUP BY result_time,user_type  ORDER BY result_time DESC limit 20
+    </select>
+</mapper>

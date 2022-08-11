@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanye.modules.talents.talentsFormal.mapper.TalTalentsFormalMapper">
+    <update id="copyToFormal" parameterType="long">
+        INSERT INTO tal_talents_formal (SELECT * FROM tal_talents WHERE tal_id =#{talId})
+    </update>
+</mapper>

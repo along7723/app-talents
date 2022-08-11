@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanye.modules.talents.training.mapper.TalTrainingMapper">
+    <select id="countTrend" parameterType="string" resultType="map" >
+        SELECT SUM(apply_members) result,DATE_FORMAT(start_time,'%Y-%m') as result_time
+         FROM tal_training WHERE start_time  LIKE CONCAT(#{year},'%') GROUP BY result_time order by result_time desc limit 10
+    </select>
+</mapper>
